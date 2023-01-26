@@ -1,0 +1,60 @@
+Question #1
+winpty docker run --iidfile --help
+
+Question #2
+winpty docker run -it --entrypoint=bash python:3.9
+pip list
+
+-- Result --
+Package    Version
+---------- -------
+pip        22.0.4
+setuptools 58.1.0
+wheel      0.38.4
+
+Question #3
+SELECT COUNT(*) 
+FROM green_taxi_trips 
+WHERE 1=1
+AND CAST(lpep_pickup_datetime AS DATE) >= DATE('2019-01-15') 
+AND CAST(lpep_dropoff_datetime AS DATE) < DATE('2019-01-16');
+
+-- Result --
+20530
+
+Question #4
+SELECT lpep_pickup_datetime
+FROM green_taxi_trips
+ORDER BY trip_distance DESC
+LIMIT 1;
+
+-- Result --
+2019-01-15 19:27:58
+
+Question #5
+SELECT passenger_count, COUNT(*)
+FROM green_taxi_trips
+WHERE 1=1
+AND CAST(lpep_pickup_datetime AS DATE) > DATE('2018-12-31') 
+AND CAST(lpep_pickup_datetime AS DATE) < DATE('2019-01-02') 
+--AND CAST(lpep_dropoff_datetime AS DATE) < DATE('2019-01-02')
+AND passenger_count IN(2,3)
+GROUP BY passenger_count;
+
+-- Result --
+2	1282
+3	254
+
+Question#6
+SELECT AZ."Zone", TZ."Zone", tip_amount
+FROM green_taxi_trips AS GTT
+LEFT JOIN (SELECT DISTINCT TZ."Zone", TZ."LocationID"  FROM taxi_zones AS TZ) AS AZ 
+ON GTT."PULocationID" = AZ."LocationID"
+LEFT JOIN (SELECT DISTINCT TZ."Zone", TZ."LocationID"  FROM taxi_zones AS TZ) AS TZ 
+ON GTT."DOLocationID" = TZ."LocationID"
+WHERE AZ."Zone" LIKE ('%Astoria%')
+ORDER BY tip_amount DESC
+LIMIT 1;
+
+-- Result --
+"Astoria"	"Long Island City/Queens Plaza"	88
